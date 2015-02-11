@@ -44,7 +44,7 @@ public class DatabazoveStudentiDaoTest {
 
     @Test
     public void testDajPodlaSkusky() {
-        Skuska skuska = skuskyDao.dajVsetky().get(1);
+        Skuska skuska = skuskyDao.dajVsetky().get(0);
         List<Student> studenti = studentiDao.dajPodlaSkusky(skuska);
         assertEquals(POCET_STUDENTOV_NA_SKUSKE, studenti.size());
     }
