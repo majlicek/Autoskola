@@ -73,15 +73,15 @@ public class DatabazoveSkuskyDao implements SkuskyDao {
         insertMap.put("datum", skuska.getDatum());
         insertMap.put("cas", skuska.getCas());
         insertMap.put("instruktorId", skuska.getInstruktor().getId());
-        insertMap.put("policajt", skuska.getPolicajt());
+        insertMap.put("komisarId", skuska.getKomisar().getId());
         List<Student> studenti = skuska.getStudenti();
 
         for (int i = 0; i < studenti.size(); i++) {
             insertMap.put(String.valueOf(i), studenti.get(i).getId());
         }
 
-        String sql = "INSERT INTO Skuska (datum, cas, instruktorId, policajt)\n"
-                + "VALUES (:datum, :cas, :instruktorId, :policajt)";
+        String sql = "INSERT INTO Skuska (datum, cas, instruktorId, komisarId)\n"
+                + "VALUES (:datum, :cas, :instruktorId, :komisarId)";
 
         StringBuilder sql2 = new StringBuilder("INSERT INTO SkuskaStudent (skuskaId, studentId) VALUES");
 
@@ -111,14 +111,14 @@ public class DatabazoveSkuskyDao implements SkuskyDao {
         updateMap.put("datum", skuska.getDatum());
         updateMap.put("cas", skuska.getCas());
         updateMap.put("instruktorId", skuska.getInstruktor().getId());
-        updateMap.put("policajt", skuska.getPolicajt());
+        updateMap.put("komisarId", skuska.getKomisar().getId());
         List<Student> studenti = skuska.getStudenti();
 
         for (int i = 0; i < studenti.size(); i++) {
             updateMap.put(String.valueOf(i), studenti.get(i).getId());
         }
 
-        String sql = "UPDATE Skuska SET datum = :datum, cas = :cas, instruktorId = :instruktorId, policajt = :policajt WHERE id = :id";
+        String sql = "UPDATE Skuska SET datum = :datum, cas = :cas, instruktorId = :instruktorId, komisarId = :komisarId WHERE id = :id";
         String sql2 = "DELETE FROM SkuskaStudent WHERE skuskaId = ?";
         StringBuilder sql3 = new StringBuilder("INSERT INTO SkuskaStudent (skuskaId, studentId) VALUES");
         for (int i = 0; i < studenti.size() - 1; i++) {

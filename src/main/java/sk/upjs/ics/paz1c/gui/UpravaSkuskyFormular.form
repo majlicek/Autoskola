@@ -35,7 +35,7 @@
                           <Component id="lblDatum" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="lblCas" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="lblStudenti" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="lblPolicajt" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblKomisar" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
@@ -54,7 +54,6 @@
                           </Group>
                           <Group type="102" attributes="0">
                               <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                  <Component id="txtPolicajt" max="32767" attributes="0"/>
                                   <Component id="scrollPane" pref="200" max="32767" attributes="0"/>
                                   <Group type="102" attributes="0">
                                       <Component id="cmBoxHodina" min="-2" pref="50" max="-2" attributes="0"/>
@@ -63,6 +62,7 @@
                                   </Group>
                                   <Component id="cmBoxInstruktor" alignment="0" max="32767" attributes="0"/>
                                   <Component id="cmBoxStudent" max="32767" attributes="0"/>
+                                  <Component id="cmBoxKomisar" alignment="0" max="32767" attributes="0"/>
                               </Group>
                               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           </Group>
@@ -114,8 +114,8 @@
               <Component id="scrollPane" min="-2" pref="140" max="-2" attributes="0"/>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="txtPolicajt" alignment="3" min="-2" pref="25" max="-2" attributes="0"/>
-                  <Component id="lblPolicajt" alignment="3" min="-2" pref="25" max="-2" attributes="0"/>
+                  <Component id="lblKomisar" alignment="3" min="-2" pref="25" max="-2" attributes="0"/>
+                  <Component id="cmBoxKomisar" alignment="3" min="-2" pref="25" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
@@ -161,11 +161,9 @@
         <Property name="text" type="java.lang.String" value="Studenti:"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JTextField" name="txtPolicajt">
-    </Component>
-    <Component class="javax.swing.JLabel" name="lblPolicajt">
+    <Component class="javax.swing.JLabel" name="lblKomisar">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Policajt:"/>
+        <Property name="text" type="java.lang.String" value="Komisar:"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JButton" name="btnVynuluj">
@@ -268,6 +266,20 @@
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnVymazActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JComboBox" name="cmBoxKomisar">
+      <Properties>
+        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="komisarComboBoxModel" type="code"/>
+        </Property>
+        <Property name="selectedIndex" type="int" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="0" type="code"/>
+        </Property>
+      </Properties>
+      <Events>
+        <EventHandler event="caretPositionChanged" listener="java.awt.event.InputMethodListener" parameters="java.awt.event.InputMethodEvent" handler="cmBoxKomisarCaretPositionChanged"/>
+        <EventHandler event="inputMethodTextChanged" listener="java.awt.event.InputMethodListener" parameters="java.awt.event.InputMethodEvent" handler="cmBoxKomisarInputMethodTextChanged"/>
       </Events>
     </Component>
   </SubComponents>

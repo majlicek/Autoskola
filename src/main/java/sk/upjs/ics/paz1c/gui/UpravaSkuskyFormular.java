@@ -14,6 +14,7 @@ public class UpravaSkuskyFormular extends javax.swing.JFrame {
     private SkuskyDao skuskyDao = BeanFactory.INSTANCE.getSkuskyDao();
     private StudentiDao studentiDao = BeanFactory.INSTANCE.getStudentiDao();
     private InstruktoriDao instruktoriDao = BeanFactory.INSTANCE.getInstruktoriDao();
+    private KomisariDao komisariDao = BeanFactory.INSTANCE.getKomisariDao();
 
     private DenComboBoxModel denComboBoxModel = new DenComboBoxModel();
     private MesiacComboBoxModel mesiacComboBoxModel = new MesiacComboBoxModel();
@@ -22,6 +23,7 @@ public class UpravaSkuskyFormular extends javax.swing.JFrame {
     private MinutaComboBoxModel minutaComboBoxModel = new MinutaComboBoxModel();
     private InstruktorComboBoxModel instruktorComboBoxModel = new InstruktorComboBoxModel();
     private StudentComboBoxModel studentComboBoxModel = new StudentComboBoxModel();
+    private KomisarComboBoxModel komisarComboBoxModel = new KomisarComboBoxModel();
 
     private Skuska skuska;
     private HlavnyFormular rodic;
@@ -68,7 +70,13 @@ public class UpravaSkuskyFormular extends javax.swing.JFrame {
         vybraniStudenti = new ArrayList(skuska.getStudenti());
         lstStudenti.setListData(vybraniStudenti.toArray());
 
-        txtPolicajt.setText(skuska.getPolicajt());
+//        txtPolicajt.setText(skuska.getPolicajt());
+        List<Komisari> komisari = komisariDao.dajVsetky();
+        for (int i = 0; i < komisari.size(); i++) {
+            if (i < komisari.size() && skuska.getKomisar().getId() == komisari.get(i).getId()) {
+                cmBoxKomisar.setSelectedIndex(i);
+            }
+        }
     }
 
     /**
@@ -86,8 +94,7 @@ public class UpravaSkuskyFormular extends javax.swing.JFrame {
         scrollPane = new javax.swing.JScrollPane();
         lstStudenti = new javax.swing.JList();
         lblStudenti = new javax.swing.JLabel();
-        txtPolicajt = new javax.swing.JTextField();
-        lblPolicajt = new javax.swing.JLabel();
+        lblKomisar = new javax.swing.JLabel();
         btnVynuluj = new javax.swing.JButton();
         btnOk = new javax.swing.JButton();
         cmBoxDen = new javax.swing.JComboBox();
@@ -99,6 +106,7 @@ public class UpravaSkuskyFormular extends javax.swing.JFrame {
         cmBoxStudent = new javax.swing.JComboBox();
         btnPridaj = new javax.swing.JButton();
         btnVymaz = new javax.swing.JButton();
+        cmBoxKomisar = new javax.swing.JComboBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Skuska");
@@ -115,7 +123,7 @@ public class UpravaSkuskyFormular extends javax.swing.JFrame {
 
         lblStudenti.setText("Studenti:");
 
-        lblPolicajt.setText("Policajt:");
+        lblKomisar.setText("Komisar:");
 
         btnVynuluj.setText("Vynuluj");
         btnVynuluj.addActionListener(new java.awt.event.ActionListener() {
@@ -166,6 +174,17 @@ public class UpravaSkuskyFormular extends javax.swing.JFrame {
             }
         });
 
+        cmBoxKomisar.setModel(komisarComboBoxModel);
+        cmBoxKomisar.setSelectedIndex(0);
+        cmBoxKomisar.addInputMethodListener(new java.awt.event.InputMethodListener() {
+            public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
+                cmBoxKomisarCaretPositionChanged(evt);
+            }
+            public void inputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
+                cmBoxKomisarInputMethodTextChanged(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -179,7 +198,7 @@ public class UpravaSkuskyFormular extends javax.swing.JFrame {
                             .addComponent(lblDatum)
                             .addComponent(lblCas)
                             .addComponent(lblStudenti)
-                            .addComponent(lblPolicajt))
+                            .addComponent(lblKomisar))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
@@ -195,14 +214,14 @@ public class UpravaSkuskyFormular extends javax.swing.JFrame {
                                 .addComponent(cmBoxRok, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(txtPolicajt)
                                     .addComponent(scrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(cmBoxHodina, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(cmBoxMinuta, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addComponent(cmBoxInstruktor, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(cmBoxStudent, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addComponent(cmBoxStudent, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(cmBoxKomisar, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addGap(0, 0, Short.MAX_VALUE))))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
@@ -241,8 +260,8 @@ public class UpravaSkuskyFormular extends javax.swing.JFrame {
                 .addComponent(scrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtPolicajt, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblPolicajt, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lblKomisar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cmBoxKomisar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnVynuluj, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -266,7 +285,7 @@ public class UpravaSkuskyFormular extends javax.swing.JFrame {
 
         skuska.setInstruktor((Instruktor) cmBoxInstruktor.getSelectedItem());
         skuska.setStudenti(new ArrayList<>(vybraniStudenti));
-        skuska.setPolicajt(txtPolicajt.getText());
+        skuska.setKomisar((Komisari) cmBoxKomisar.getSelectedItem());
 
         if (skuska.getId() == null) {
             skuskyDao.uloz(skuska);
@@ -302,7 +321,8 @@ public class UpravaSkuskyFormular extends javax.swing.JFrame {
         vybraniStudenti = new ArrayList<>();
         lstStudenti.setListData(vybraniStudenti.toArray());
 
-        txtPolicajt.setText("");
+        cmBoxKomisar.setSelectedIndex(0);
+        cmBoxKomisar.updateUI();
     }//GEN-LAST:event_btnVynulujActionPerformed
 
     private void btnPridajActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPridajActionPerformed
@@ -322,6 +342,14 @@ public class UpravaSkuskyFormular extends javax.swing.JFrame {
         vybraniStudenti.remove(student);
         lstStudenti.setListData(vybraniStudenti.toArray());
     }//GEN-LAST:event_btnVymazActionPerformed
+
+    private void cmBoxKomisarInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_cmBoxKomisarInputMethodTextChanged
+       // TODO add your handling code here:
+    }//GEN-LAST:event_cmBoxKomisarInputMethodTextChanged
+
+    private void cmBoxKomisarCaretPositionChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_cmBoxKomisarCaretPositionChanged
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cmBoxKomisarCaretPositionChanged
 
     /**
      * @param args the command line arguments
@@ -366,6 +394,7 @@ public class UpravaSkuskyFormular extends javax.swing.JFrame {
     private javax.swing.JComboBox cmBoxDen;
     private javax.swing.JComboBox cmBoxHodina;
     private javax.swing.JComboBox cmBoxInstruktor;
+    private javax.swing.JComboBox cmBoxKomisar;
     private javax.swing.JComboBox cmBoxMesiac;
     private javax.swing.JComboBox cmBoxMinuta;
     private javax.swing.JComboBox cmBoxRok;
@@ -373,11 +402,10 @@ public class UpravaSkuskyFormular extends javax.swing.JFrame {
     private javax.swing.JLabel lblCas;
     private javax.swing.JLabel lblDatum;
     private javax.swing.JLabel lblInstruktor;
-    private javax.swing.JLabel lblPolicajt;
+    private javax.swing.JLabel lblKomisar;
     private javax.swing.JLabel lblStudenti;
     private javax.swing.JList lstStudenti;
     private javax.swing.JScrollPane scrollPane;
-    private javax.swing.JTextField txtPolicajt;
     // End of variables declaration//GEN-END:variables
 
 }

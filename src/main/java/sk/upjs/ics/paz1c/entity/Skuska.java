@@ -11,7 +11,7 @@ public class Skuska {
     private Time cas;
     private List<Student> studenti;
     private Instruktor instruktor;
-    private String policajt;
+    private Komisari komisar;
 
     public Long getId() {
         return id;
@@ -53,17 +53,17 @@ public class Skuska {
         this.instruktor = instruktor;
     }
 
-    public String getPolicajt() {
-        return policajt;
+    public Komisari getKomisar() {
+        return komisar;
     }
 
-    public void setPolicajt(String policajt) {
-        this.policajt = policajt;
+    public void setKomisar(Komisari komisar) {
+        this.komisar = komisar;
     }
-
+    
     @Override
     public String toString() {
-        return "Skuska{" + "id=" + id + ", datum=" + datum + ", cas=" + cas + ", studenti=" + studenti + ", instruktor=" + instruktor + ", policajt=" + policajt + '}';
+        return "Skuska{" + "id=" + id + ", datum=" + datum + ", cas=" + cas + ", studenti=" + studenti + ", instruktor=" + instruktor + ", policajt=" + komisar + '}';
     }
 
 }

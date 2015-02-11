@@ -30,6 +30,10 @@ public class HlavnyFormular extends javax.swing.JFrame {
     private VozidlaDao vozidlaDao = BeanFactory.INSTANCE.getVozidlaDao();
     private VozidlaTableModel vozidlaTableModel = new VozidlaTableModel();
     private TableRowSorter vozidlaRowSorter = new TableRowSorter(vozidlaTableModel);
+    
+    private KomisariDao komisariDao = BeanFactory.INSTANCE.getKomisariDao();
+    private KomisariTableModel komisariTableModel = new KomisariTableModel();
+    private TableRowSorter komisariRowSorter = new TableRowSorter(komisariTableModel);
 
     public HlavnyFormular() {
         initComponents();
@@ -38,6 +42,7 @@ public class HlavnyFormular extends javax.swing.JFrame {
         nastavStudenti();
         nastavInstruktori();
         nastavVozidla();
+        nastavKomisari();
     }
 
     private void nastavJazdy() {
@@ -200,6 +205,38 @@ public class HlavnyFormular extends javax.swing.JFrame {
         vozidlaTableModel.obnov();
     }
 
+    private void nastavKomisari() {
+        tblKomisari.setModel(komisariTableModel);
+
+        tblKomisari.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                tblKomisariSelectionValueChanged(e);
+            }
+        });
+
+        rbtnKomisariMeno.doClick();
+        aktualizujZoznamKomisarov();
+    }
+
+    private void tblKomisariSelectionValueChanged(ListSelectionEvent e) {
+        if (!e.getValueIsAdjusting()) {
+            if (!tblKomisari.getSelectionModel().isSelectionEmpty()) {
+                btnKomisariUprav.setEnabled(true);
+                btnKomisariVymaz.setEnabled(true);
+                btnKomisariDetail.setEnabled(true);
+            } else {
+                btnKomisariUprav.setEnabled(false);
+                btnKomisariVymaz.setEnabled(false);
+                btnKomisariDetail.setEnabled(false);
+            }
+        }
+    }
+
+    public void aktualizujZoznamKomisarov() {
+        komisariTableModel.obnov();
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -287,6 +324,20 @@ public class HlavnyFormular extends javax.swing.JFrame {
         btnVozidlaUprav = new javax.swing.JButton();
         btnVozidlaDetail = new javax.swing.JButton();
         btnVozidlaPridaj = new javax.swing.JButton();
+        paneKomisari = new javax.swing.JPanel();
+        txtKomisariHladaj = new javax.swing.JTextField();
+        btnKomisariHladaj = new javax.swing.JButton();
+        btnKomisariVynuluj = new javax.swing.JButton();
+        lblKomisariHladajPodla1 = new javax.swing.JLabel();
+        rbtnKomisariMeno = new javax.swing.JRadioButton();
+        rbtnKomisariPriezvisko = new javax.swing.JRadioButton();
+        rbtnKomisariHodnost = new javax.swing.JRadioButton();
+        scrollPaneVozidla1 = new javax.swing.JScrollPane();
+        tblKomisari = new javax.swing.JTable();
+        btnKomisariVymaz = new javax.swing.JButton();
+        btnKomisariUprav = new javax.swing.JButton();
+        btnKomisariDetail = new javax.swing.JButton();
+        btnKomisariPridaj = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Autoskola");
@@ -395,7 +446,7 @@ public class HlavnyFormular extends javax.swing.JFrame {
             .addGroup(paneJazdyLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(paneJazdyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(scrollPaneJazdy, javax.swing.GroupLayout.DEFAULT_SIZE, 775, Short.MAX_VALUE)
+                    .addComponent(scrollPaneJazdy, javax.swing.GroupLayout.DEFAULT_SIZE, 755, Short.MAX_VALUE)
                     .addGroup(paneJazdyLayout.createSequentialGroup()
                         .addGap(10, 10, 10)
                         .addComponent(lblJazdyHladajPodla)
@@ -560,7 +611,7 @@ public class HlavnyFormular extends javax.swing.JFrame {
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnSkuskyVynuluj, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(scrollPaneSkusky, javax.swing.GroupLayout.DEFAULT_SIZE, 775, Short.MAX_VALUE)
+                    .addComponent(scrollPaneSkusky, javax.swing.GroupLayout.DEFAULT_SIZE, 755, Short.MAX_VALUE)
                     .addGroup(paneSkuskyLayout.createSequentialGroup()
                         .addComponent(txtSkuskyHladaj)
                         .addGap(18, 18, 18)
@@ -696,7 +747,7 @@ public class HlavnyFormular extends javax.swing.JFrame {
             .addGroup(paneStudentiLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(paneStudentiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(scrollPaneStudenti, javax.swing.GroupLayout.DEFAULT_SIZE, 775, Short.MAX_VALUE)
+                    .addComponent(scrollPaneStudenti, javax.swing.GroupLayout.DEFAULT_SIZE, 755, Short.MAX_VALUE)
                     .addGroup(paneStudentiLayout.createSequentialGroup()
                         .addComponent(btnStudentiRozsireneVyhladavanie, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -769,9 +820,19 @@ public class HlavnyFormular extends javax.swing.JFrame {
 
         btngInstruktori.add(rbtnInstruktoriMeno);
         rbtnInstruktoriMeno.setText("Mena");
+        rbtnInstruktoriMeno.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rbtnInstruktoriMenoActionPerformed(evt);
+            }
+        });
 
         btngInstruktori.add(rbtnInstruktoriPriezvisko);
         rbtnInstruktoriPriezvisko.setText("Priezviska");
+        rbtnInstruktoriPriezvisko.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rbtnInstruktoriPriezviskoActionPerformed(evt);
+            }
+        });
 
         tblInstruktori.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -833,7 +894,7 @@ public class HlavnyFormular extends javax.swing.JFrame {
             .addGroup(paneInstruktoriLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(paneInstruktoriLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(scrollPaneInstruktori, javax.swing.GroupLayout.DEFAULT_SIZE, 775, Short.MAX_VALUE)
+                    .addComponent(scrollPaneInstruktori, javax.swing.GroupLayout.DEFAULT_SIZE, 755, Short.MAX_VALUE)
                     .addGroup(paneInstruktoriLayout.createSequentialGroup()
                         .addComponent(txtInstruktoriHladaj)
                         .addGap(18, 18, 18)
@@ -904,6 +965,11 @@ public class HlavnyFormular extends javax.swing.JFrame {
 
         btngVozidla.add(rbtnVozidlaSpz);
         rbtnVozidlaSpz.setText("SPZ");
+        rbtnVozidlaSpz.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rbtnVozidlaSpzActionPerformed(evt);
+            }
+        });
 
         btngVozidla.add(rbtnVozidlaZnacka);
         rbtnVozidlaZnacka.setText("Znacky");
@@ -982,7 +1048,7 @@ public class HlavnyFormular extends javax.swing.JFrame {
                         .addComponent(rbtnVozidlaKategoria)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnVozidlaVynuluj, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(scrollPaneVozidla, javax.swing.GroupLayout.DEFAULT_SIZE, 775, Short.MAX_VALUE)
+                    .addComponent(scrollPaneVozidla, javax.swing.GroupLayout.DEFAULT_SIZE, 755, Short.MAX_VALUE)
                     .addGroup(paneVozidlaLayout.createSequentialGroup()
                         .addComponent(txtVozidlaHladaj)
                         .addGap(18, 18, 18)
@@ -1025,11 +1091,171 @@ public class HlavnyFormular extends javax.swing.JFrame {
 
         tabbedPaneHlavny.addTab("Vozidla", paneVozidla);
 
+        txtKomisariHladaj.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtKomisariHladajActionPerformed(evt);
+            }
+        });
+
+        btnKomisariHladaj.setText("Hladaj");
+        btnKomisariHladaj.setPreferredSize(new java.awt.Dimension(70, 25));
+        btnKomisariHladaj.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnKomisariHladajActionPerformed(evt);
+            }
+        });
+
+        btnKomisariVynuluj.setText("Vynuluj");
+        btnKomisariVynuluj.setPreferredSize(new java.awt.Dimension(70, 25));
+        btnKomisariVynuluj.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnKomisariVynulujActionPerformed(evt);
+            }
+        });
+
+        lblKomisariHladajPodla1.setText("Hladaj podla:");
+
+        btngVozidla.add(rbtnKomisariMeno);
+        rbtnKomisariMeno.setText("Mena");
+        rbtnKomisariMeno.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rbtnKomisariMenoActionPerformed(evt);
+            }
+        });
+
+        btngVozidla.add(rbtnKomisariPriezvisko);
+        rbtnKomisariPriezvisko.setText("Priezviska");
+
+        btngVozidla.add(rbtnKomisariHodnost);
+        rbtnKomisariHodnost.setText("Hodnosti");
+        rbtnKomisariHodnost.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rbtnKomisariHodnostActionPerformed(evt);
+            }
+        });
+
+        tblKomisari.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        tblKomisari.setRowSorter(komisariRowSorter);
+        tblKomisari.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblKomisariMouseClicked(evt);
+            }
+        });
+        scrollPaneVozidla1.setViewportView(tblKomisari);
+
+        btnKomisariVymaz.setText("Vymaz");
+        btnKomisariVymaz.setEnabled(false);
+        btnKomisariVymaz.setPreferredSize(new java.awt.Dimension(70, 25));
+        btnKomisariVymaz.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnKomisariVymazActionPerformed(evt);
+            }
+        });
+
+        btnKomisariUprav.setText("Uprav");
+        btnKomisariUprav.setEnabled(false);
+        btnKomisariUprav.setPreferredSize(new java.awt.Dimension(70, 25));
+        btnKomisariUprav.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnKomisariUpravActionPerformed(evt);
+            }
+        });
+
+        btnKomisariDetail.setText("Detail");
+        btnKomisariDetail.setEnabled(false);
+        btnKomisariDetail.setPreferredSize(new java.awt.Dimension(70, 25));
+        btnKomisariDetail.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnKomisariDetailActionPerformed(evt);
+            }
+        });
+
+        btnKomisariPridaj.setText("Pridaj");
+        btnKomisariPridaj.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnKomisariPridajActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout paneKomisariLayout = new javax.swing.GroupLayout(paneKomisari);
+        paneKomisari.setLayout(paneKomisariLayout);
+        paneKomisariLayout.setHorizontalGroup(
+            paneKomisariLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(paneKomisariLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(paneKomisariLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(paneKomisariLayout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addComponent(lblKomisariHladajPodla1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(rbtnKomisariMeno)
+                        .addGap(18, 18, 18)
+                        .addComponent(rbtnKomisariPriezvisko)
+                        .addGap(18, 18, 18)
+                        .addComponent(rbtnKomisariHodnost)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnKomisariVynuluj, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(scrollPaneVozidla1, javax.swing.GroupLayout.DEFAULT_SIZE, 755, Short.MAX_VALUE)
+                    .addGroup(paneKomisariLayout.createSequentialGroup()
+                        .addComponent(txtKomisariHladaj)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnKomisariHladaj, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, paneKomisariLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btnKomisariPridaj, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnKomisariVymaz, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnKomisariUprav, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnKomisariDetail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
+        );
+        paneKomisariLayout.setVerticalGroup(
+            paneKomisariLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(paneKomisariLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(paneKomisariLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtKomisariHladaj, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnKomisariHladaj, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(paneKomisariLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblKomisariHladajPodla1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnKomisariVynuluj, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(rbtnKomisariMeno, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(rbtnKomisariPriezvisko, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(rbtnKomisariHodnost, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(scrollPaneVozidla1, javax.swing.GroupLayout.DEFAULT_SIZE, 440, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addGroup(paneKomisariLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnKomisariDetail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnKomisariUprav, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnKomisariVymaz, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnKomisariPridaj, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
+        );
+
+        tabbedPaneHlavny.addTab("Komisari", paneKomisari);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(tabbedPaneHlavny)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(tabbedPaneHlavny)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1389,6 +1615,98 @@ public class HlavnyFormular extends javax.swing.JFrame {
         aktualizujZoznamVozidiel();
     }//GEN-LAST:event_btnVozidlaVynulujActionPerformed
 
+    private void btnKomisariHladajActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnKomisariHladajActionPerformed
+        String filter = txtKomisariHladaj.getText().trim();
+
+        if (rbtnKomisariMeno.isSelected()) {
+            komisariTableModel.zobrazPodlaMena(filter);
+        }
+        if (rbtnKomisariPriezvisko.isSelected()) {
+            komisariTableModel.zobrazPodlaPriezviska(filter);
+        }
+        if (rbtnKomisariHodnost.isSelected()) {
+            komisariTableModel.zobrazPodlaHodnosti(filter);
+        }
+    }//GEN-LAST:event_btnKomisariHladajActionPerformed
+
+    private void btnKomisariVynulujActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnKomisariVynulujActionPerformed
+        txtKomisariHladaj.setText("");
+        rbtnKomisariMeno.doClick();
+        aktualizujZoznamKomisarov();
+    }//GEN-LAST:event_btnKomisariVynulujActionPerformed
+
+    private void tblKomisariMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblKomisariMouseClicked
+        if (evt.getClickCount() == 2) {
+            btnKomisariDetail.doClick();
+        }
+    }//GEN-LAST:event_tblKomisariMouseClicked
+
+    private void btnKomisariVymazActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnKomisariVymazActionPerformed
+        int vybranyRiadok = tblKomisari.getSelectedRow();
+        int vybratyIndexVModeli = tblKomisari.convertRowIndexToModel(vybranyRiadok);
+
+        Komisari vybranyKomisar = komisariTableModel.dajPodlaCislaRiadku(vybratyIndexVModeli);
+
+        int tlacidlo = JOptionPane.showConfirmDialog(this,
+                "Naozaj odstranit?",
+                "Odstranit komisara",
+                JOptionPane.YES_NO_OPTION
+        );
+        if (tlacidlo == JOptionPane.YES_OPTION) {
+            komisariDao.vymaz(vybranyKomisar);
+            aktualizujZoznamKomisarov();
+        }
+    }//GEN-LAST:event_btnKomisariVymazActionPerformed
+
+    private void btnKomisariUpravActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnKomisariUpravActionPerformed
+        int vybranyRiadok = tblKomisari.getSelectedRow();
+        int vybratyIndexVModeli = tblKomisari.convertRowIndexToModel(vybranyRiadok);
+
+        Komisari vybratyKomisar = komisariTableModel.dajPodlaCislaRiadku(vybratyIndexVModeli);
+
+        UpravaKomisariFormular upravaKomisariFormular = new UpravaKomisariFormular(this, vybratyKomisar);
+        upravaKomisariFormular.setVisible(true);
+    }//GEN-LAST:event_btnKomisariUpravActionPerformed
+
+    private void btnKomisariDetailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnKomisariDetailActionPerformed
+        int vybranyRiadok = tblKomisari.getSelectedRow();
+        int vybratyIndexVModeli = tblKomisari.convertRowIndexToModel(vybranyRiadok);
+
+        Komisari vybratyKomisar = komisariTableModel.dajPodlaCislaRiadku(vybratyIndexVModeli);
+
+        DetailKomisariFormular detailKomisariFormular = new DetailKomisariFormular(vybratyKomisar);
+        detailKomisariFormular.setVisible(true);
+    }//GEN-LAST:event_btnKomisariDetailActionPerformed
+
+    private void btnKomisariPridajActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnKomisariPridajActionPerformed
+        UpravaKomisariFormular pridanieKomisariFormular = new UpravaKomisariFormular(this, new Komisari());
+        pridanieKomisariFormular.setVisible(true);
+    }//GEN-LAST:event_btnKomisariPridajActionPerformed
+
+    private void txtKomisariHladajActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtKomisariHladajActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtKomisariHladajActionPerformed
+
+    private void rbtnKomisariMenoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbtnKomisariMenoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_rbtnKomisariMenoActionPerformed
+
+    private void rbtnVozidlaSpzActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbtnVozidlaSpzActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_rbtnVozidlaSpzActionPerformed
+
+    private void rbtnInstruktoriMenoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbtnInstruktoriMenoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_rbtnInstruktoriMenoActionPerformed
+
+    private void rbtnInstruktoriPriezviskoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbtnInstruktoriPriezviskoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_rbtnInstruktoriPriezviskoActionPerformed
+
+    private void rbtnKomisariHodnostActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbtnKomisariHodnostActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_rbtnKomisariHodnostActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -1438,6 +1756,12 @@ public class HlavnyFormular extends javax.swing.JFrame {
     private javax.swing.JButton btnJazdyUprav;
     private javax.swing.JButton btnJazdyVymaz;
     private javax.swing.JButton btnJazdyVynuluj;
+    private javax.swing.JButton btnKomisariDetail;
+    private javax.swing.JButton btnKomisariHladaj;
+    private javax.swing.JButton btnKomisariPridaj;
+    private javax.swing.JButton btnKomisariUprav;
+    private javax.swing.JButton btnKomisariVymaz;
+    private javax.swing.JButton btnKomisariVynuluj;
     private javax.swing.JButton btnSkuskyDetail;
     private javax.swing.JButton btnSkuskyHladaj;
     private javax.swing.JButton btnSkuskyPridaj;
@@ -1466,11 +1790,13 @@ public class HlavnyFormular extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel lblInstruktoriHladajPodla;
     private javax.swing.JLabel lblJazdyHladajPodla;
+    private javax.swing.JLabel lblKomisariHladajPodla1;
     private javax.swing.JLabel lblSkuskyHladajPodla;
     private javax.swing.JLabel lblStudentiHladajPodla;
     private javax.swing.JLabel lblVozidlaHladajPodla;
     private javax.swing.JPanel paneInstruktori;
     private javax.swing.JPanel paneJazdy;
+    private javax.swing.JPanel paneKomisari;
     private javax.swing.JPanel paneSkusky;
     private javax.swing.JPanel paneStudenti;
     private javax.swing.JPanel paneVozidla;
@@ -1479,6 +1805,9 @@ public class HlavnyFormular extends javax.swing.JFrame {
     private javax.swing.JRadioButton rbtnJazdyDatum;
     private javax.swing.JRadioButton rbtnJazdyInstruktor;
     private javax.swing.JRadioButton rbtnJazdyStudent;
+    private javax.swing.JRadioButton rbtnKomisariHodnost;
+    private javax.swing.JRadioButton rbtnKomisariMeno;
+    private javax.swing.JRadioButton rbtnKomisariPriezvisko;
     private javax.swing.JRadioButton rbtnSkuskyDatum;
     private javax.swing.JRadioButton rbtnSkuskyInstruktor;
     private javax.swing.JRadioButton rbtnSkuskyStudent;
@@ -1492,14 +1821,17 @@ public class HlavnyFormular extends javax.swing.JFrame {
     private javax.swing.JScrollPane scrollPaneSkusky;
     private javax.swing.JScrollPane scrollPaneStudenti;
     private javax.swing.JScrollPane scrollPaneVozidla;
+    private javax.swing.JScrollPane scrollPaneVozidla1;
     private javax.swing.JTabbedPane tabbedPaneHlavny;
     private javax.swing.JTable tblInstruktori;
     private javax.swing.JTable tblJazdy;
+    private javax.swing.JTable tblKomisari;
     private javax.swing.JTable tblSkusky;
     private javax.swing.JTable tblStudenti;
     private javax.swing.JTable tblVozidla;
     private javax.swing.JTextField txtInstruktoriHladaj;
     private javax.swing.JTextField txtJazdyHladaj;
+    private javax.swing.JTextField txtKomisariHladaj;
     private javax.swing.JTextField txtSkuskyHladaj;
     private javax.swing.JTextField txtStudentiHladaj;
     private javax.swing.JTextField txtVozidlaHladaj;

@@ -12,6 +12,8 @@ public class SkuskaRowMapper implements RowMapper<Skuska> {
     private StudentRowMapper studentRowMapper = new StudentRowMapper();
 
     private InstruktorRowMapper instruktorRowMapper = new InstruktorRowMapper();
+    
+    private KomisariRowMapper komisariRowMapper = new KomisariRowMapper();
 
     private StudentiDao studentiDao = BeanFactory.INSTANCE.getStudentiDao();
 
@@ -23,7 +25,7 @@ public class SkuskaRowMapper implements RowMapper<Skuska> {
         skuska.setDatum(rs.getDate("SkuskaDatum"));
         skuska.setCas(rs.getTime("SkuskaCas"));
         skuska.setInstruktor(instruktorRowMapper.mapRow(rs, rowNum));
-        skuska.setPolicajt(rs.getString("SkuskaPolicajt"));
+        skuska.setKomisar(komisariRowMapper.mapRow(rs, rowNum));
         skuska.setStudenti(studentiDao.dajPodlaSkusky(skuska));
 
         return skuska;

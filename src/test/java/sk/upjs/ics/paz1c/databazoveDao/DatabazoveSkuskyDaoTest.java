@@ -8,8 +8,10 @@ import static org.junit.Assert.*;
 import org.junit.BeforeClass;
 import sk.upjs.ics.paz1c.autoskola.BeanFactory;
 import sk.upjs.ics.paz1c.dao.InstruktoriDao;
+import sk.upjs.ics.paz1c.dao.KomisariDao;
 import sk.upjs.ics.paz1c.dao.SkuskyDao;
 import sk.upjs.ics.paz1c.dao.StudentiDao;
+import sk.upjs.ics.paz1c.entity.Komisari;
 import sk.upjs.ics.paz1c.entity.Skuska;
 
 public class DatabazoveSkuskyDaoTest {
@@ -27,6 +29,8 @@ public class DatabazoveSkuskyDaoTest {
     private final InstruktoriDao instruktoriDao = BeanFactory.INSTANCE.getInstruktoriDao();
 
     private final StudentiDao studentiDao = BeanFactory.INSTANCE.getStudentiDao();
+    
+    private final KomisariDao komisariDao = BeanFactory.INSTANCE.getKomisariDao(); 
 
     public DatabazoveSkuskyDaoTest() {
     }
@@ -56,7 +60,7 @@ public class DatabazoveSkuskyDaoTest {
 
     @Test
     public void testHladajPodlaInstruktora() {
-        List<Skuska> skusky = skuskyDao.hladajPodlaInstruktora("Jozef Krajňák");
+        List<Skuska> skusky = skuskyDao.hladajPodlaInstruktora("Anton Šofér");
         assertEquals(POCET_SKUSOK_V_DB_PODLA_INSTRUKTORA, skusky.size());
     }
 
@@ -64,15 +68,16 @@ public class DatabazoveSkuskyDaoTest {
     public void testUprav() {
         List<Skuska> skusky = skuskyDao.dajVsetky();
         Skuska skuska = skusky.get(0);
-        String staryPolicajt = skuska.getPolicajt();
+        Komisari staryPolicajt = skuska.getKomisar();
 
-        skuska.setPolicajt("abc");
+        
+        skuska.setKomisar(komisariDao.dajVsetky().get(1));
         skuskyDao.uprav(skuska);
         skusky = skuskyDao.dajVsetky();
-        assertEquals("abc", skusky.get(0).getPolicajt());
+        assertEquals(komisariDao.dajVsetky().get(1).getMeno(), skusky.get(0).getKomisar().getMeno());
 
         // Vrati povodnu hodnotu
-        skuska.setPolicajt(staryPolicajt);
+        skuska.setKomisar(staryPolicajt);
         skuskyDao.uprav(skuska);
     }
 
@@ -85,7 +90,7 @@ public class DatabazoveSkuskyDaoTest {
         skuska.setDatum(Date.valueOf("2014-12-08"));
         skuska.setCas(Time.valueOf("09:00:00"));
         skuska.setInstruktor(instruktoriDao.dajVsetky().get(0));
-        skuska.setPolicajt("mjr. Michal Leško");
+        skuska.setKomisar(komisariDao.dajVsetky().get(0));
         skuska.setStudenti(studentiDao.dajVsetky().subList(0, 2));
 
         // Ulozi skusku

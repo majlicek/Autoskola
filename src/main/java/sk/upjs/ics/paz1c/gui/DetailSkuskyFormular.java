@@ -22,7 +22,7 @@ public class DetailSkuskyFormular extends javax.swing.JFrame {
         }
         txtaStudenti.setText(sb.toString());
 
-        txtPolicajt.setText(skuska.getPolicajt());
+        txtPolicajt.setText(skuska.getKomisar().getHodnost() + " " + skuska.getKomisar().getMeno() + " " + skuska.getKomisar().getPriezvisko());
     }
 
     /**

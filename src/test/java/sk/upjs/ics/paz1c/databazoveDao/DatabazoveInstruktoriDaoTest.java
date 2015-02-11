@@ -67,7 +67,7 @@ public class DatabazoveInstruktoriDaoTest {
 
         Instruktor instruktor = new Instruktor();
         instruktor.setMeno("Artur");
-        instruktor.setPriezvisko("Veľký");
+        instruktor.setPriezvisko("Velky");
         instruktor.setKontakt("0902345789");
 
         // Ulozi instruktora

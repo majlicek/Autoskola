@@ -72,18 +72,33 @@ CREATE TABLE Skuska (
     datum DATE,
     cas TIME,     
     instruktorId BIGINT NOT NULL REFERENCES Instruktor(id),
-    policajt VARCHAR(50)
+    komisar BIGINT NOT NULL REFERENCES Komisari(id)
 );
 
-INSERT INTO Skuska (datum, cas, instruktorId, policajt)
+INSERT INTO Skuska (datum, cas, instruktorId, komisar)
 VALUES
-('20140212', '070000', 2, 'mjr. Igor Roth'),
-('20140212', '080000', 3, 'pplk. Jarmila Miháľová'),
-('20140212', '090000', 2, 'pplk. Jarmila Miháľová'),
-('20140212', '100000', 1, 'mjr. Igor Roth'),
-('20141128', '073000', 4, 'kpt. Richard Oľha');
+('20140212', '070000', 2, 1),
+('20140212', '080000', 3, 2),
+('20140212', '090000', 2, 1),
+('20140212', '100000', 1, 3),
+('20141128', '073000', 4, 1);
 
 SELECT * FROM Skuska;
+
+DROP TABLE IF EXISTS Komisari;
+
+CREATE TABLE Komisari (
+    id BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    meno VARCHAR(50),
+    priezvisko VARCHAR(50) NOT NULL,
+    hodnost VARCHAR(10)
+);
+
+INSERT INTO Komisari (meno, priezvisko, hodnost)
+VALUES 
+('Igor', 'Roth', 'mjr.'),
+('Jarmila', 'Miháľová', 'pplk.'),
+('Richard', 'Oľha', 'kpt.');
 
 DROP TABLE IF EXISTS Jazda;
 
